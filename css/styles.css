@@ -1,0 +1,30 @@
+* {
+  padding: 0;
+  margin: 0;
+}
+.odd {
+
+  background-color: lightpink;
+}
+
+.even {
+  background-color: grey;
+}
+
+.col-4, .even{
+  height: 100%;
+  width: 33%;
+}
+.row {
+  width: 100%;
+  height: 33%;
+}
+
+#board {
+  width: 50vw;
+  height: 50vw;
+}
+
+#gameOver, .result {
+  display: none;
+}
