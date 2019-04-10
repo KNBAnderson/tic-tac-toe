@@ -54,6 +54,22 @@ function isGameOver(object) {
     return false;
   }
 }
+function assignX(square, boardObj){
+  boardObj[square] = X;
+}
+
+function assignO(square, boardObj){
+  boardObj[square] = O;
+}
+
+
+
+function changeTurn(oturn){
+  console.log(oturn);
+  oturn = !oturn;
+  console.log(oturn);
+  return oturn;
+}
 
 
 
@@ -82,9 +98,7 @@ function checkGameResult(object) {
   }
 }
 
-function assignX(square, boardObj){
-  boardObj[square] = X;
-}
+
 
 // console.log(assertEqual('isGameOver prototype', false, win.isGameOver()));
 // function to find number that is point on board where x or o is entered. Should only be (0 - 9)
@@ -93,14 +107,31 @@ $(function(){
   var spotClicked = '';
   var blankBoard = new Board();
   var gameWin = new WinScenario(blankBoard);
+  var Oturn = false;
 
   $('.col-4').on('click', function(){
-    spotClicked = $(this).attr('value');
-    assignX(spotClicked, blankBoard);
-    console.log(blankBoard);
+    if(!$(this).find('i').hasClass('fa-dragon') || !$(this).find('i').hasClass('fa-robot')) {
+      spotClicked = $(this).attr('value');
+//Problem with dragon being clickable
+//Problem with gameWin updating a turn behind everytime
+      if(Oturn){
+        assignO(spotClicked, blankBoard)
+        $(this).find('i').addClass('fa-robot');
+      }else {
+        assignX(spotClicked, blankBoard);
+        $(this).find('i').addClass('fa-dragon');
+      }
+      Oturn = changeTurn(Oturn);
+      console.log(Oturn);
 
-    console.log(assertEqual('isGameOver function', false, isGameOver(gameWin)));
-    console.log(assertEqual('makeTotalArray function', [3, 12, 21, 9, 12, 15, 12, 12], makeTotalArray(gameWin)));
-    console.log(assertEqual('checkGameResult function', undefined, checkGameResult(gameWin)));
+      console.log(blankBoard);
+      console.log(gameWin);
+      gameWin = new WinScenario(blankBoard);
+      //
+      // console.log(assertEqual('isGameOver function', false, isGameOver(gameWin)));
+      // console.log(assertEqual('makeTotalArray function', [3, 12, 21, 9, 12, 15, 12, 12], makeTotalArray(gameWin)));
+      // console.log(assertEqual('checkGameResult function', undefined, checkGameResult(gameWin)));
+
+    }
   });
 })
