@@ -11,28 +11,28 @@ var O = 100;
 
 function Board(){
   //figure out how to link to clickable buttons//
-  this.one = '0',
-  this.two = '1',
-  this.three = '2',
-  this.four = '3',
-  this.five = '4',
-  this.six = '5',
-  this.seven = '6',
-  this.eight = '7',
-  this.nine = '8';
+  this[0] = '0',
+  this[1] = '1',
+  this[2] = '2',
+  this[3] = '3',
+  this[4] =  '4',
+  this[5] = '5',
+  this[6] = '6',
+  this[7] = '7',
+  this[8] = '8';
 }
 
 function WinScenario(boardObject){
-  this.rowOne = [boardObject.one, boardObject.two, boardObject.three],
-  this.rowTwo = [boardObject.four ,boardObject.five, boardObject.six],
-  this.rowThree = [boardObject.seven, boardObject.eight ,boardObject.nine],
+  this.rowOne = [boardObject[0], boardObject[1], boardObject[2]],
+  this.rowTwo = [boardObject[3] ,boardObject[4], boardObject[5]],
+  this.rowThree = [boardObject[6], boardObject[7] ,boardObject[8]],
 
-  this.colOne = [boardObject.one ,boardObject.four, boardObject.seven],
-  this.colTwo = [boardObject.two ,boardObject.five ,boardObject.eight],
-  this.colThree = [boardObject.three ,boardObject.six ,boardObject.nine],
+  this.colOne = [boardObject[0] ,boardObject[3], boardObject[6]],
+  this.colTwo = [boardObject[1] ,boardObject[4] ,boardObject[7]],
+  this.colThree = [boardObject[2] ,boardObject[5] ,boardObject[8]],
 
-  this.diagOne = [boardObject.one ,boardObject.five ,boardObject.nine],
-  this.diagTwo = [boardObject.three ,boardObject.five ,boardObject.seven]
+  this.diagOne = [boardObject[0] ,boardObject[4] ,boardObject[8]],
+  this.diagTwo = [boardObject[2] ,boardObject[4] ,boardObject[6]]
 }
 //Add while loop to continue game while below is false
 function makeTotalArray(object){
@@ -55,18 +55,35 @@ function isGameOver(object) {
   }
 }
 
+
+
 function checkGameResult(object) {
   if (isGameOver(object)[0]) {
+    $('#board').hide();
+    $('#gameOver').show();
     if (isGameOver(object[1]) === 30) {
+      $('.result').hide
+      $('#win').show
       return "X has won"
     } else if (isGameOver(object[1]) === 300) {
+      $('.result').hide
+      $('#lose').show
       return 'O has won'
     } else {
       console.log('Something in wrong in the checkREsult function')
     }
-  }else if(){
-
+    // else if all squares full function equals true
+  // }else if(){
+  //$('#board').hide();
+  //$('#gameOver').show();
+  // $('.result').hide
+  //$('#lose').show
+  // return draw
   }
+}
+
+function assignX(square, boardObj){
+  boardObj[square] = X;
 }
 
 // console.log(assertEqual('isGameOver prototype', false, win.isGameOver()));
@@ -79,17 +96,11 @@ $(function(){
 
   $('.col-4').on('click', function(){
     spotClicked = $(this).attr('value');
-
-    if (isGameOver(gameWin)) {
-      $('#board').hide();
-      $('#gameOver').show();
-
-      //if statement for win, lose, or draw
-      $('.result').show();
-    };
+    assignX(spotClicked, blankBoard);
+    console.log(blankBoard);
 
     console.log(assertEqual('isGameOver function', false, isGameOver(gameWin)));
     console.log(assertEqual('makeTotalArray function', [3, 12, 21, 9, 12, 15, 12, 12], makeTotalArray(gameWin)));
     console.log(assertEqual('checkGameResult function', undefined, checkGameResult(gameWin)));
-  })
+  });
 })
