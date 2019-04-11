@@ -5,11 +5,12 @@ function assertEqual(testDescription, expected, actual) {
   return '' + testDescription + ' failed. Expected: ' + expected + ' but got ' + actual;
 }
 
-
+//setup the player points//
 var X = 10;
 var O = 100;
 
 function Board(){
+  //set up the gameboard with values at each spot//
   //figure out how to link to clickable buttons//
   this[0] = '0',
   this[1] = '1',
@@ -20,9 +21,9 @@ function Board(){
   this[6] = '6',
   this[7] = '7',
   this[8] = '8';
-  this.oturn = false;
-}
 
+}
+//setup win conditions into arrays//
 function WinScenario(boardObject){
   this.rowOne = [boardObject[0], boardObject[1], boardObject[2]],
   this.rowTwo = [boardObject[3] ,boardObject[4], boardObject[5]],
@@ -37,6 +38,7 @@ function WinScenario(boardObject){
 }
 //Add while loop to continue game while below is false
 
+//assign either X or O to a square when it's clicked.
 function assignX(square, boardObj){
   boardObj[square] = X;
 }
@@ -46,7 +48,7 @@ function assignO(square, boardObj){
 }
 
 
-
+//changes the players turn//
 function changeTurn(oturn){
   oturn = !oturn;
   return oturn;
@@ -81,18 +83,21 @@ function equalTo10or100(element){
 function checkGameResult(winScenario, boardObj) {
 
   var isBoardFull = Object.values(boardObj).every(equalTo10or100);
-  console.log(Object.values(boardObj));
-  console.log(isBoardFull);
+  var isThereWinner = isThereAWinner(winScenario);
 
-  if (isThereAWinner(winScenario)[0]) {
-    $('#board').hide();
+  console.log(isThereWinner[1]);
+  console.log(isThereWinner, isBoardFull);
+  if(!isBoardFull && !isThereWinner){
+
+  }else if (isThereWinner[0]) {
     $('#gameOver').show();
-    if (isThereAWinner(winScenario[1]) === 30) {
+    if (isThereWinner[1] === 30) {
+
       $('.result').hide
       $('#win').show
       console.log('x has won');
       return "X has won"
-    } else if (isThereAWinner(winScenario[1]) === 300) {
+    } else if (isThereWinner[1] === 300) {
       $('.result').hide
       $('#lose').show
       console.log("o has won")
@@ -100,14 +105,14 @@ function checkGameResult(winScenario, boardObj) {
     } else {
       console.log('Something in wrong in the checkGameResult function')
     }
+    console.log("you got here");
+  }else if(isBoardFull && !isThereWinner){
+    console.log('game is a draw');
 
-    // else if all squares full function equals true
-    // }else if(){
-    //$('#board').hide();
-    //$('#gameOver').show();
-    // $('.result').hide
-    //$('#lose').show
-    // return draw
+    $('#gameOver').show();
+    $('.result').hide
+    $('#lose').show
+    return 'draw';
   }
 }
 
@@ -122,7 +127,9 @@ $(function(){
   var gameWin = new WinScenario(blankBoard);
   var Oturn = false;
 
+
   $('.col-4').on('click', function(){
+
     if(!$(this).find('i').hasClass('fa-robot') && !$(this).find('i').hasClass('fa-dragon')) {
       spotClicked = $(this).attr('value');
 
@@ -137,9 +144,9 @@ $(function(){
         gameWin = new WinScenario(blankBoard);
       }
 
+      Oturn = changeTurn(Oturn);
       checkGameResult(gameWin,blankBoard);
       console.log(checkGameResult(gameWin));
-      Oturn = changeTurn(Oturn);
 
 
       console.log(blankBoard);
