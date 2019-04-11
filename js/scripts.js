@@ -15,11 +15,12 @@ function Board(){
   this[1] = '1',
   this[2] = '2',
   this[3] = '3',
-  this[4] =  '4',
+  this[4] = '4',
   this[5] = '5',
   this[6] = '6',
   this[7] = '7',
   this[8] = '8';
+  this.oturn = false;
 }
 
 function WinScenario(boardObject){
@@ -35,25 +36,7 @@ function WinScenario(boardObject){
   this.diagTwo = [boardObject[2] ,boardObject[4] ,boardObject[6]]
 }
 //Add while loop to continue game while below is false
-function makeTotalArray(object){
-  var totalArray = []
-  var arrayOfEntries = Object.values(object);
-  for(var i = 0; i <= arrayOfEntries.length - 1; i++){
-    var total = arrayOfEntries[i].reduce(function(a, b) {return parseInt(a) + parseInt(b)});
-    totalArray.push(total);
-  }
-  return totalArray;
-}
 
-function isGameOver(object) {
-  for (let i = 0; i <= makeTotalArray(object).length - 1; i++) {
-    var total = makeTotalArray(object)[i];
-    if (total === 30 || total === 300) {
-      return [true, total]
-    }
-    return false;
-  }
-}
 function assignX(square, boardObj){
   boardObj[square] = X;
 }
@@ -65,36 +48,66 @@ function assignO(square, boardObj){
 
 
 function changeTurn(oturn){
-  console.log(oturn);
   oturn = !oturn;
-  console.log(oturn);
   return oturn;
 }
 
+function makeTotalArray(winScenario){
+  var totalArray = []
+  var arrayOfEntries = Object.values(winScenario);
+  for(var i = 0; i <= arrayOfEntries.length - 1; i++){
+    var total = arrayOfEntries[i].reduce(function(a, b) {return parseInt(a) + parseInt(b)});
+    totalArray.push(total);
+  }
+  return totalArray;
+}
+
+function isThereAWinner(winScenario) {
+  for (let i = 0; i <= makeTotalArray(winScenario).length -1; i++) {
+    var total = makeTotalArray(winScenario)[i];
+    if (total === 30 || total === 300) {
+      return [true, total]
+    }
+  }
+  return false;
+}
 
 
-function checkGameResult(object) {
-  if (isGameOver(object)[0]) {
+function equalTo10or100(element){
+  return (element ===10 || element ===100);
+}
+
+
+function checkGameResult(winScenario, boardObj) {
+
+  var isBoardFull = Object.values(boardObj).every(equalTo10or100);
+  console.log(Object.values(boardObj));
+  console.log(isBoardFull);
+
+  if (isThereAWinner(winScenario)[0]) {
     $('#board').hide();
     $('#gameOver').show();
-    if (isGameOver(object[1]) === 30) {
+    if (isThereAWinner(winScenario[1]) === 30) {
       $('.result').hide
       $('#win').show
+      console.log('x has won');
       return "X has won"
-    } else if (isGameOver(object[1]) === 300) {
+    } else if (isThereAWinner(winScenario[1]) === 300) {
       $('.result').hide
       $('#lose').show
+      console.log("o has won")
       return 'O has won'
     } else {
-      console.log('Something in wrong in the checkREsult function')
+      console.log('Something in wrong in the checkGameResult function')
     }
+
     // else if all squares full function equals true
-  // }else if(){
-  //$('#board').hide();
-  //$('#gameOver').show();
-  // $('.result').hide
-  //$('#lose').show
-  // return draw
+    // }else if(){
+    //$('#board').hide();
+    //$('#gameOver').show();
+    // $('.result').hide
+    //$('#lose').show
+    // return draw
   }
 }
 
@@ -110,23 +123,28 @@ $(function(){
   var Oturn = false;
 
   $('.col-4').on('click', function(){
-    if(!$(this).find('i').hasClass('fa-dragon') || !$(this).find('i').hasClass('fa-robot')) {
+    if(!$(this).find('i').hasClass('fa-robot') && !$(this).find('i').hasClass('fa-dragon')) {
       spotClicked = $(this).attr('value');
-//Problem with dragon being clickable
-//Problem with gameWin updating a turn behind everytime
+
+      //Problem with gameWin updating a turn behind everytime
       if(Oturn){
         assignO(spotClicked, blankBoard)
         $(this).find('i').addClass('fa-robot');
+        gameWin = new WinScenario(blankBoard);
       }else {
         assignX(spotClicked, blankBoard);
         $(this).find('i').addClass('fa-dragon');
+        gameWin = new WinScenario(blankBoard);
       }
+
+      checkGameResult(gameWin,blankBoard);
+      console.log(checkGameResult(gameWin));
       Oturn = changeTurn(Oturn);
-      console.log(Oturn);
+
 
       console.log(blankBoard);
       console.log(gameWin);
-      gameWin = new WinScenario(blankBoard);
+
       //
       // console.log(assertEqual('isGameOver function', false, isGameOver(gameWin)));
       // console.log(assertEqual('makeTotalArray function', [3, 12, 21, 9, 12, 15, 12, 12], makeTotalArray(gameWin)));
