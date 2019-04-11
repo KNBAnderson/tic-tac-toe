@@ -81,59 +81,44 @@ function equalTo10or100(element){
 
 
 function checkGameResult(winScenario, boardObj) {
-
   var isBoardFull = Object.values(boardObj).every(equalTo10or100);
   var isThereWinner = isThereAWinner(winScenario);
+  var outcome = ''
 
-  console.log(isThereWinner[1]);
-  console.log(isThereWinner, isBoardFull);
   if(!isBoardFull && !isThereWinner){
-
-  }else if (isThereWinner[0]) {
+    outcome = 'continue';
+  } else if (isThereWinner[0]) {
     $('#gameOver').show();
     if (isThereWinner[1] === 30) {
-
-      $('.result').hide
-      $('#win').show
+      outcome = 'Xwin';
       console.log('x has won');
-      return "X has won"
     } else if (isThereWinner[1] === 300) {
-      $('.result').hide
-      $('#lose').show
-      console.log("o has won")
-      return 'O has won'
+      outcome = 'Owin';
+      console.log("o has won");
     } else {
-      console.log('Something in wrong in the checkGameResult function')
+      console.log('Something in wrong in the checkGameResult function');
     }
-    console.log("you got here");
   }else if(isBoardFull && !isThereWinner){
     console.log('game is a draw');
-
-    $('#gameOver').show();
-    $('.result').hide
-    $('#lose').show
-    return 'draw';
+    outcome = 'draw';
+  
   }
+  return outcome
 }
 
-
-
-// console.log(assertEqual('isGameOver prototype', false, win.isGameOver()));
-// function to find number that is point on board where x or o is entered. Should only be (0 - 9)
 
 $(function(){
   var spotClicked = '';
   var blankBoard = new Board();
   var gameWin = new WinScenario(blankBoard);
   var Oturn = false;
-
+  var outcome = '';
 
   $('.col-4').on('click', function(){
 
     if(!$(this).find('i').hasClass('fa-robot') && !$(this).find('i').hasClass('fa-dragon')) {
       spotClicked = $(this).attr('value');
 
-      //Problem with gameWin updating a turn behind everytime
       if(Oturn){
         assignO(spotClicked, blankBoard)
         $(this).find('i').addClass('fa-robot');
@@ -143,20 +128,21 @@ $(function(){
         $(this).find('i').addClass('fa-dragon');
         gameWin = new WinScenario(blankBoard);
       }
-
       Oturn = changeTurn(Oturn);
-      checkGameResult(gameWin,blankBoard);
-      console.log(checkGameResult(gameWin));
-
-
-      console.log(blankBoard);
-      console.log(gameWin);
-
-      //
-      // console.log(assertEqual('isGameOver function', false, isGameOver(gameWin)));
-      // console.log(assertEqual('makeTotalArray function', [3, 12, 21, 9, 12, 15, 12, 12], makeTotalArray(gameWin)));
-      // console.log(assertEqual('checkGameResult function', undefined, checkGameResult(gameWin)));
-
+      outcome = checkGameResult(gameWin,blankBoard);
+      if (outcome === 'Xwin') {
+        $('#gameOver').show();
+        $('.result').hide();
+        $('#Xwin').show();
+      } else if (outcome === 'Owin') {
+        $('#gameOver').show();
+        $('.result').hide();
+        $('#Owin').show();
+      } else if (outcome === 'draw'){
+        $('#gameOver').show();
+        $('.result').hide();
+        $('#lose').show();
+      }
     }
   });
 })

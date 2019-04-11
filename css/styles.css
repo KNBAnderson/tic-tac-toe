@@ -1,7 +1,7 @@
-* {
+/* * {
   padding: 0;
   margin: 0;
-}
+} */
 .odd {
 
   background-color: lightpink;
@@ -11,9 +11,13 @@
   background-color: grey;
 }
 
-.col-4, .even{
+.col-4, {
   height: 100%;
   width: 33%;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  justify-content: center;
 }
 .row {
   width: 100%;
@@ -23,8 +27,27 @@
 #board {
   width: 50vw;
   height: 50vw;
+  margin: auto;
 }
 
 #gameOver, .result {
   display: none;
+}
+
+ i {
+   display: block;
+   z-index: 2;
+   font-size: 10vw;
+   margin-left: auto;
+   margin-right: auto;
+   text-align: center;
+   padding: 15px 15px;
+ }
+
+ .fa-dragon {
+   color: green;
+ }
+
+.fa-robot {
+  color: silver;
 }
